@@ -1,11 +1,9 @@
 #!/usr/bin/expect
-# SPDX-FileCopyrightText: 2021, Carles Fernandez-Prades <carles.fernandez@cttc.es>
-# SPDX-License-Identifier: MIT
 set timeout -1
 set install_dir [lindex $argv 1]
 set installer [lindex $argv 0]
 
-spawn $installer $install_dir
+spawn $installer -d $install_dir
 set timeout 2
 expect {
     "ERROR: Invalid options:" {spawn $installer -d $install_dir }
@@ -26,12 +24,12 @@ expect {
     timeout { send "q"; sleep 1; exp_continue}
 }
 expect {
+    "*Installing PetaLinux...*" {}
     "* >*" {send "y\r"}
     timeout { send "q"; sleep 1; exp_continue}
 }
 
-# set timeout -1
-
-# expect "INFO: Checking PetaLinux installer integrity..."
-# expect "INFO: Installing PetaLinux..."
+#set timeout -1
+#expect "INFO: Checking PetaLinux installer integrity..."
+#expect "INFO: PetaLinux SDK has been installed"
 #interact
