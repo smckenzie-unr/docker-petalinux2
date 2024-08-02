@@ -1,7 +1,7 @@
 # SPDX-FileCopyrightText: 2021-2023, Carles Fernandez-Prades <carles.fernandez@cttc.es>
 # SPDX-License-Identifier: MIT
 
-FROM ubuntu:18.04
+FROM ubuntu:20.04
 
 LABEL version="3.0" description="Geniux builder" maintainer="carles.fernandez@cttc.es"
 
@@ -87,6 +87,8 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y -q \
   xvfb \
   xxd \
   zlib1g-dev \
+  libtinfo5 \
+  dnsutils \
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/*
 
@@ -104,8 +106,12 @@ RUN wget https://www.python.org/ftp/python/3.11.4/Python-3.11.4.tgz \
   && ./configure --enable-optimizations && make && make altinstall \
   && cd .. && rm Python-3.11.*.tgz && rm -rf Python-3.11.*/
 
+ARG USER_ID
+ARG GROUP_ID
+
 # make a petalinux user
-RUN adduser --disabled-password --gecos '' petalinux && \
+RUN addgroup --gid $GROUP_ID petalinux
+RUN adduser --disabled-password --gecos '' --uid $USER_ID --gid $GROUP_ID petalinux && \
   usermod -aG sudo petalinux && \
   echo "petalinux ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
 
