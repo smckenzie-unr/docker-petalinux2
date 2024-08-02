@@ -70,7 +70,7 @@ if ! ps -fC python3 | grep "http.server" > /dev/null ; then
 fi
 
 echo "Creating Docker image docker_petalinux2:$XILVER..."
-time docker build --build-arg PETA_VERSION="${XILVER}" --build-arg PETA_RUN_FILE="${PLNX}" "${INSTALL_VIVADO[@]}" -t docker_petalinux2:"${XILVER}" .
+time docker build --build-arg PETA_VERSION="${XILVER}" --build-arg PETA_RUN_FILE="${PLNX}" "${INSTALL_VIVADO[@]}" --build-arg USER_ID=$(id -u) --build-arg GROUP_ID=$(id -g) -t docker_petalinux2:"${XILVER}" .
 if [ -f "y2k22_patch-1.2.zip" ] ; then
     rm "y2k22_patch-1.2.zip"
 fi
